@@ -1,0 +1,26 @@
+{
+  "_comment": "WARNING 级别默认模板 - 警告提醒",
+  "elements": [
+    {
+      "tag": "markdown",
+      "content": "**警告内容**\n{{ content }}"
+    },
+    {
+      "tag": "div",
+      "fields": [
+        { "key": "来源系统", "value": "{{ source }}" },
+        { "key": "发生时间", "value": "{{ timestamp }}" }
+      ]
+    },
+    {
+      "tag": "extra_fields",
+      "condition": "{{ extra }}"
+    },
+    {
+      "tag": "actions",
+      "condition": "{{ links }}"
+    }
+  ],
+  "footer_note": "📋 建议及时关注，避免问题恶化"
+}
+

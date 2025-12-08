@@ -1,0 +1,6 @@
+# Core dependencies
+httpx>=0.24.0
+jinja2>=3.0.0
+
+# Optional: Redis support for distributed dedup/rate-limiting
+# redis>=4.0.0

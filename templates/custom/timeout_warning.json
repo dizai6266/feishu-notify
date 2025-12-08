@@ -1,0 +1,33 @@
+{
+  "_comment": "自定义模板示例 - 超时预警",
+  
+  "default_level": "WARNING",
+  "title_prefix": "⏰ [超时预警]",
+  
+  "elements": [
+    {
+      "tag": "markdown",
+      "content": "**预警内容**\n{{ content }}"
+    },
+    {
+      "tag": "div",
+      "fields": [
+        { "key": "来源系统", "value": "{{ source }}" },
+        { "key": "任务名称", "value": "{{ task_name }}" },
+        { "key": "发生时间", "value": "{{ timestamp }}" },
+        { "key": "已耗时", "value": "{{ duration }}" }
+      ]
+    },
+    {
+      "tag": "extra_fields",
+      "condition": "{{ extra }}"
+    },
+    {
+      "tag": "actions",
+      "condition": "{{ links }}"
+    }
+  ],
+  
+  "footer_note": "⏰ 任务执行时间超过预期，请关注"
+}
+

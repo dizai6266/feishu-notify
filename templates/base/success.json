@@ -1,0 +1,25 @@
+{
+  "_comment": "SUCCESS 级别默认模板 - 成功通知",
+  "elements": [
+    {
+      "tag": "div",
+      "fields": [
+        { "key": "任务名称", "value": "{{ task_name }}" },
+        { "key": "来源系统", "value": "{{ source }}" },
+        { "key": "开始时间", "value": "{{ start_time }}" },
+        { "key": "结束时间", "value": "{{ end_time or timestamp }}" },
+        { "key": "耗时", "value": "{{ duration }}" }
+      ]
+    },
+    {
+      "tag": "metrics_block",
+      "condition": "{{ metrics }}"
+    },
+    {
+      "tag": "actions",
+      "condition": "{{ links }}"
+    }
+  ],
+  "footer_note": null
+}
+

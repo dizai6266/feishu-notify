@@ -1,0 +1,64 @@
+{
+  "_comment": "飞书通知级别配置 - 定义各级别的颜色、Emoji、前缀等",
+  
+  "CRITICAL": {
+    "priority": "P0",
+    "color": "red",
+    "emoji": "🚨",
+    "prefix": "[紧急]",
+    "description": "生产事故、数据丢失、服务宕机",
+    "mention_all_default": true,
+    "skip_rate_limit": true
+  },
+  
+  "ERROR": {
+    "priority": "P1",
+    "color": "orange",
+    "emoji": "❌",
+    "prefix": "[失败]",
+    "description": "任务失败、SQL报错、数据校验失败",
+    "mention_all_default": false,
+    "skip_rate_limit": true
+  },
+  
+  "WARNING": {
+    "priority": "P2",
+    "color": "yellow",
+    "emoji": "⚠️",
+    "prefix": "[警告]",
+    "description": "数据延迟、资源不足、阈值预警",
+    "mention_all_default": false,
+    "skip_rate_limit": false
+  },
+  
+  "SUCCESS": {
+    "priority": "P3",
+    "color": "green",
+    "emoji": "✅",
+    "prefix": "[成功]",
+    "description": "任务完成、部署成功、数据同步完成",
+    "mention_all_default": false,
+    "skip_rate_limit": false
+  },
+  
+  "INFO": {
+    "priority": "P4",
+    "color": "blue",
+    "emoji": "ℹ️",
+    "prefix": "[通知]",
+    "description": "任务开始、进度更新、日常播报",
+    "mention_all_default": false,
+    "skip_rate_limit": false
+  },
+  
+  "PENDING": {
+    "priority": "P5",
+    "color": "purple",
+    "emoji": "⏳",
+    "prefix": "[待办]",
+    "description": "权限申请、审批待办、人工确认",
+    "mention_all_default": false,
+    "skip_rate_limit": false
+  }
+}
+

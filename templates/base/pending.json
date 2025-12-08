@@ -1,0 +1,26 @@
+{
+  "_comment": "PENDING 级别默认模板 - 待办/审批",
+  "elements": [
+    {
+      "tag": "markdown",
+      "content": "**待办内容**\n{{ content }}"
+    },
+    {
+      "tag": "div",
+      "fields": [
+        { "key": "来源系统", "value": "{{ source }}" },
+        { "key": "创建时间", "value": "{{ timestamp }}" }
+      ]
+    },
+    {
+      "tag": "extra_fields",
+      "condition": "{{ extra }}"
+    },
+    {
+      "tag": "actions",
+      "condition": "{{ links }}"
+    }
+  ],
+  "footer_note": "📋 请及时处理"
+}
+

@@ -1,0 +1,36 @@
+{
+  "_comment": "自定义模板示例 - 数据质量告警",
+  
+  "default_level": "WARNING",
+  "title_prefix": "📊 [数据质量]",
+  
+  "elements": [
+    {
+      "tag": "markdown",
+      "content": "**质量问题**\n{{ content }}"
+    },
+    {
+      "tag": "div",
+      "fields": [
+        { "key": "数据表", "value": "{{ task_name }}" },
+        { "key": "检查时间", "value": "{{ timestamp }}" },
+        { "key": "来源", "value": "{{ source }}" }
+      ]
+    },
+    {
+      "tag": "metrics_block",
+      "condition": "{{ metrics }}"
+    },
+    {
+      "tag": "extra_fields", 
+      "condition": "{{ extra }}"
+    },
+    {
+      "tag": "actions",
+      "condition": "{{ links }}"
+    }
+  ],
+  
+  "footer_note": "📊 请检查数据质量问题"
+}
+

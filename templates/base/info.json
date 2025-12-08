@@ -1,0 +1,22 @@
+{
+  "_comment": "INFO 级别默认模板 - 信息通知",
+  "elements": [
+    {
+      "tag": "markdown",
+      "content": "{{ content }}"
+    },
+    {
+      "tag": "div",
+      "fields": [
+        { "key": "来源", "value": "{{ source }}" },
+        { "key": "时间", "value": "{{ timestamp }}" }
+      ]
+    },
+    {
+      "tag": "actions",
+      "condition": "{{ links }}"
+    }
+  ],
+  "footer_note": null
+}
+

@@ -1,0 +1,32 @@
+{
+  "_comment": "CRITICAL 级别默认模板 - 紧急告警",
+  "elements": [
+    {
+      "tag": "markdown",
+      "content": "**告警内容**\n{{ content }}"
+    },
+    {
+      "tag": "div",
+      "fields": [
+        { "key": "来源系统", "value": "{{ source }}" },
+        { "key": "发生时间", "value": "{{ timestamp }}" },
+        { "key": "任务名称", "value": "{{ task_name }}" },
+        { "key": "任务ID", "value": "{{ task_id }}" }
+      ]
+    },
+    {
+      "tag": "error_block",
+      "condition": "{{ error_msg }}"
+    },
+    {
+      "tag": "metrics_block",
+      "condition": "{{ metrics }}"
+    },
+    {
+      "tag": "actions",
+      "condition": "{{ links }}"
+    }
+  ],
+  "footer_note": "⚠️ **请立即处理！** 如有疑问请联系值班人员"
+}
+

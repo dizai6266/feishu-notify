@@ -1,0 +1,63 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "feishu-notify"
+version = "1.0.0"
+description = "一个热插拔、灵活、易用的飞书卡片通知工具"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.8"
+authors = [
+    {name = "Data Team"}
+]
+keywords = ["feishu", "lark", "notification", "card", "webhook"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+dependencies = [
+    "httpx>=0.24.0",
+    "jinja2>=3.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.21.0",
+    "black>=23.0.0",
+    "ruff>=0.1.0",
+]
+redis = [
+    "redis>=4.0.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/your-org/feishu-notify"
+Documentation = "https://github.com/your-org/feishu-notify#readme"
+
+[tool.setuptools]
+py-modules = ["notifier", "__init__"]
+packages = ["core", "config", "templates", "examples"]
+
+[tool.setuptools.package-data]
+"templates" = ["base/*.json", "custom/*.json"]
+"config" = ["levels.json"]
+
+[tool.black]
+line-length = 100
+target-version = ["py38", "py39", "py310", "py311"]
+
+[tool.ruff]
+line-length = 100
+select = ["E", "F", "I", "N", "W"]
+ignore = ["E501"]
