@@ -14,10 +14,14 @@
 ## 安装
 
 ```bash
-pip install httpx jinja2
+# 从 Git 仓库安装（推荐，适合公司内部私有包）
+pip install git+https://github.com/your-org/feishu-notify.git
 
-# 或从源码安装
+# 本地开发安装
 pip install -e .
+
+# 如果公司有私有 PyPI
+pip install feishu-notify --index-url https://pypi.company.com/simple/
 ```
 
 ## 快速开始
@@ -41,7 +45,7 @@ export FEISHU_WEBHOOK="https://open.feishu.cn/open-apis/bot/v2/hook/your-webhook
 ### 2. 使用内置级别发送
 
 ```python
-from notifier import Notifier
+from feishu_notify import Notifier
 
 notifier = Notifier(webhook="https://...", source="Airflow")
 
@@ -73,28 +77,29 @@ notifier.timeout_warning("严重超时", level=NotifyLevel.ERROR)  # 变成橙�
 
 ```
 feishu-notify/
-├── __init__.py              # 主入口导出
-├── notifier.py              # Notifier 类
-├── config/
-│   ├── __init__.py          # 配置类 NotifyConfig
-│   └── levels.json          # 级别配置（颜色、emoji、前缀）
-├── core/
-│   ├── types.py             # 类型定义
-│   ├── builder.py           # 卡片构建器
-│   ├── sender.py            # 发送器
-│   └── dedup.py             # 去重限流
-├── templates/
-│   ├── loader.py            # 模板加载器
-│   ├── base/                # 默认模板（按级别）
-│   │   └── *.json
-│   └── custom/              # 自定义模板（热插拔）
-│       └── *.json
+├── pyproject.toml
+├── README.md
 ├── examples/                # 示例代码（可直接运行）
 │   ├── basic_usage.py
 │   └── airflow_integration.py
-├── README.md
-├── pyproject.toml
-└── requirements.txt
+└── src/
+    └── feishu_notify/       # 包主目录
+        ├── __init__.py      # 主入口导出
+        ├── notifier.py      # Notifier 类
+        ├── config/
+        │   ├── __init__.py  # 配置类 NotifyConfig
+        │   └── levels.json  # 级别配置（颜色、emoji、前缀）
+        ├── core/
+        │   ├── types.py     # 类型定义
+        │   ├── builder.py   # 卡片构建器
+        │   ├── sender.py    # 发送器
+        │   └── dedup.py     # 去重限流
+        └── templates/
+            ├── loader.py    # 模板加载器
+            ├── base/        # 默认模板（按级别）
+            │   └── *.json
+            └── custom/      # 自定义模板（热插拔）
+                └── *.json
 ```
 
 ---
@@ -296,8 +301,8 @@ asyncio.run(main())
 ## 配置选项
 
 ```python
-from notifier import Notifier
-from config import NotifyConfig
+from feishu_notify import Notifier
+from feishu_notify.config import NotifyConfig
 
 config = NotifyConfig(
     webhook_url="https://...",
@@ -339,7 +344,7 @@ notifier = Notifier(config=config)
 ## Airflow 集成示例
 
 ```python
-from notifier import Notifier
+from feishu_notify import Notifier
 
 notifier = Notifier(webhook="https://...", source="Airflow")
 

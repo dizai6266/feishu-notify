@@ -2,8 +2,8 @@
 飞书通知工具 - 一个热插拔、灵活、易用的飞书卡片通知库
 
 Usage:
-    from notifier import Notifier
-    from core.types import NotifyLevel, NotifyMessage
+    from feishu_notify import Notifier
+    from feishu_notify.core.types import NotifyLevel, NotifyMessage
 
     # 快捷方式
     notifier = Notifier(webhook="https://...")
@@ -15,13 +15,13 @@ Usage:
     await notifier.send(msg)
 """
 
-from core.types import NotifyLevel, NotifyMessage, LinkButton
-from core.builder import FeishuCardBuilder
-from core.sender import FeishuSender
-from core.dedup import DedupManager, RateLimiter
-from templates.loader import TemplateLoader
-from config import NotifyConfig
-from notifier import Notifier
+from feishu_notify.core.types import NotifyLevel, NotifyMessage, LinkButton
+from feishu_notify.core.builder import FeishuCardBuilder
+from feishu_notify.core.sender import FeishuSender
+from feishu_notify.core.dedup import DedupManager, RateLimiter
+from feishu_notify.templates.loader import TemplateLoader
+from feishu_notify.config import NotifyConfig
+from feishu_notify.notifier import Notifier
 
 __version__ = "1.0.0"
 __all__ = [

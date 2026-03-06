@@ -7,7 +7,7 @@
 
 from typing import Any, Dict, List, Optional
 
-from core.types import NotifyLevel, NotifyMessage
+from feishu_notify.core.types import NotifyLevel, NotifyMessage
 
 
 class FeishuCardBuilder:

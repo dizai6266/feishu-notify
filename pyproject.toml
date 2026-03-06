@@ -45,13 +45,12 @@ redis = [
 Homepage = "https://github.com/your-org/feishu-notify"
 Documentation = "https://github.com/your-org/feishu-notify#readme"
 
-[tool.setuptools]
-py-modules = ["notifier", "__init__"]
-packages = ["core", "config", "templates", "examples"]
+[tool.setuptools.packages.find]
+where = ["src"]
 
 [tool.setuptools.package-data]
-"templates" = ["base/*.json", "custom/*.json"]
-"config" = ["levels.json"]
+"feishu_notify.templates" = ["base/*.json", "custom/*.json"]
+"feishu_notify.config" = ["levels.json"]
 
 [tool.black]
 line-length = 100

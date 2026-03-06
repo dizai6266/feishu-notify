@@ -7,12 +7,12 @@
 import logging
 from typing import Any, Dict, List, Optional, Union
 
-from config import NotifyConfig
-from core.builder import FeishuCardBuilder
-from core.dedup import DedupManager, MessageFilter, RateLimiter
-from core.sender import FeishuSender, SendResult
-from core.types import LinkButton, NotifyLevel, NotifyMessage
-from templates.loader import TemplateLoader
+from feishu_notify.config import NotifyConfig
+from feishu_notify.core.builder import FeishuCardBuilder
+from feishu_notify.core.dedup import DedupManager, MessageFilter, RateLimiter
+from feishu_notify.core.sender import FeishuSender, SendResult
+from feishu_notify.core.types import LinkButton, NotifyLevel, NotifyMessage
+from feishu_notify.templates.loader import TemplateLoader
 
 
 logger = logging.getLogger(__name__)

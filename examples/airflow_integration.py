@@ -5,7 +5,7 @@
 展示如何在 Airflow DAG 中使用飞书通知
 
 使用方法:
-    1. 将此文件复制到 Airflow DAGs 目录
+    1. 安装包: pip install feishu-notify (或从 Git 仓库安装)
     2. 设置环境变量: export FEISHU_WEBHOOK="https://open.feishu.cn/open-apis/bot/v2/hook/your-webhook-id"
 """
 
@@ -14,11 +14,8 @@ import sys
 from datetime import datetime
 from typing import Any, Dict
 
-# 添加项目根目录到 Python 路径，支持直接运行
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-from notifier import Notifier
-from core.types import NotifyLevel, NotifyMessage
+from feishu_notify import Notifier
+from feishu_notify.core.types import NotifyLevel, NotifyMessage
 
 
 # 全局通知器（建议在 Airflow 配置中统一管理）
