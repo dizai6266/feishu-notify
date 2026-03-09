@@ -15,6 +15,8 @@ Usage:
     await notifier.send(msg)
 """
 
+from importlib.metadata import version, PackageNotFoundError
+
 from feishu_notify.core.types import NotifyLevel, NotifyMessage, LinkButton
 from feishu_notify.core.builder import FeishuCardBuilder
 from feishu_notify.core.sender import FeishuSender
@@ -23,7 +25,10 @@ from feishu_notify.templates.loader import TemplateLoader
 from feishu_notify.config import NotifyConfig
 from feishu_notify.notifier import Notifier
 
-__version__ = "1.0.0"
+try:
+    __version__ = version("feishu-notify")
+except PackageNotFoundError:
+    __version__ = "0.0.0-dev"
 __all__ = [
     "Notifier",
     "NotifyLevel",

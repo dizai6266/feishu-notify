@@ -14,7 +14,7 @@ import time
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-from jinja2 import Environment, BaseLoader, TemplateNotFound
+from jinja2.sandbox import SandboxedEnvironment
 
 from feishu_notify.core.types import NotifyLevel, NotifyMessage
 
@@ -27,29 +27,15 @@ CUSTOM_TEMPLATES_DIR = TEMPLATES_DIR / "custom"
 LEGACY_CARDS_DIR = TEMPLATES_DIR / "cards"
 
 
-class DictLoader(BaseLoader):
-    """从字典加载模板的 Jinja2 Loader"""
-    
-    def __init__(self, templates: Dict[str, str]):
-        self.templates = templates
-    
-    def get_source(self, environment, template):
-        if template in self.templates:
-            source = self.templates[template]
-            return source, template, lambda: True
-        raise TemplateNotFound(template)
-
-
 class TemplateLoader:
     """
     模板加载器
-    
+
     架构:
     - templates/base/     : 6 个级别的默认模板（可自定义修改）
     - templates/custom/   : 用户自定义模板
-    - config/levels.json  : 级别配置（颜色、emoji、前缀）
     """
-    
+
     def __init__(
         self,
         template_dir: Optional[Path] = None,
@@ -60,11 +46,12 @@ class TemplateLoader:
         self.custom_dir = template_dir or CUSTOM_TEMPLATES_DIR
         self.enable_hot_reload = enable_hot_reload
         self.reload_interval = reload_interval
-        
+
         self._base_templates: Dict[str, Dict[str, Any]] = {}
         self._custom_templates: Dict[str, Dict[str, Any]] = {}
         self._template_mtimes: Dict[str, float] = {}
         self._lock = threading.RLock()
+        self._jinja_env = SandboxedEnvironment()
         
         # 初始加载
         self._load_all_templates()
@@ -255,6 +242,11 @@ class TemplateLoader:
             "mention_all": message.mention_all,
             "extra": message.extra or {},
         }
+        # 展平 extra 到上下文，方便模板直接用 {{ key }} 访问
+        if message.extra:
+            for k, v in message.extra.items():
+                if k not in context:
+                    context[k] = v
     
     def _build_card(
         self, 
@@ -409,12 +401,12 @@ class TemplateLoader:
     
     def _render_string(self, template_str: str, context: Dict[str, Any]) -> str:
         """渲染字符串中的 Jinja2 变量"""
-        if "{{" not in template_str:
+        if "{{" not in template_str and "{%" not in template_str:
             return template_str
-        
+
         try:
-            env = Environment(loader=DictLoader({"t": template_str}))
-            return env.get_template("t").render(context)
+            template = self._jinja_env.from_string(template_str)
+            return template.render(context)
         except Exception:
             return template_str
     
