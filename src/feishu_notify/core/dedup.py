@@ -16,7 +16,7 @@ from collections import defaultdict
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Tuple
 
-from core.types import NotifyLevel, NotifyMessage
+from feishu_notify.core.types import NotifyLevel, NotifyMessage
 
 
 @dataclass
@@ -362,10 +362,17 @@ class MessageFilter:
             enable_dedup: 是否启用去重
             enable_rate_limit: 是否启用限流
         """
-        self.dedup_manager = dedup_manager or DedupManager()
-        self.rate_limiter = rate_limiter or RateLimiter()
         self.enable_dedup = enable_dedup
         self.enable_rate_limit = enable_rate_limit
+        # Only create defaults when actually enabled
+        if enable_dedup:
+            self.dedup_manager = dedup_manager or DedupManager()
+        else:
+            self.dedup_manager = None
+        if enable_rate_limit:
+            self.rate_limiter = rate_limiter or RateLimiter()
+        else:
+            self.rate_limiter = None
     
     def should_send(self, message: NotifyMessage) -> Tuple[bool, str]:
         """
@@ -378,13 +385,13 @@ class MessageFilter:
             (是否发送, 原因说明)
         """
         # 检查去重
-        if self.enable_dedup:
+        if self.enable_dedup and self.dedup_manager:
             is_dup, record = self.dedup_manager.is_duplicate(message)
             if is_dup and record:
                 return False, f"消息重复（已发送 {record.count} 次，首次: {record.first_seen:.0f}）"
         
         # 检查限流
-        if self.enable_rate_limit:
+        if self.enable_rate_limit and self.rate_limiter:
             allowed, count = self.rate_limiter.is_allowed(message)
             if not allowed:
                 return False, f"触发限流（{self.rate_limiter.window_seconds}s 内已发送 {count} 条）"
@@ -393,9 +400,9 @@ class MessageFilter:
     
     def mark_sent(self, message: NotifyMessage) -> None:
         """标记消息已发送"""
-        if self.enable_dedup:
+        if self.enable_dedup and self.dedup_manager:
             self.dedup_manager.mark(message)
-        
-        if self.enable_rate_limit:
+
+        if self.enable_rate_limit and self.rate_limiter:
             self.rate_limiter.record(message)
 

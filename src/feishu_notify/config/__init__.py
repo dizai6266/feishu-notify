@@ -4,30 +4,10 @@
 支持通过环境变量、配置文件或代码配置
 """
 
-import json
 import os
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Dict, List, Optional
-
-
-# 级别配置文件路径
-LEVELS_CONFIG_PATH = Path(__file__).parent / "levels.json"
-
-
-def load_levels_config() -> Dict[str, Any]:
-    """加载级别配置"""
-    if LEVELS_CONFIG_PATH.exists():
-        with open(LEVELS_CONFIG_PATH, "r", encoding="utf-8") as f:
-            config = json.load(f)
-            # 移除注释字段
-            config.pop("_comment", None)
-            return config
-    return {}
-
-
-# 全局级别配置
-LEVELS_CONFIG = load_levels_config()
+from typing import Dict, List, Optional
 
 
 @dataclass
@@ -43,6 +23,11 @@ class NotifyConfig:
     
     # Webhook 配置
     webhook_url: Optional[str] = None  # 飞书机器人 Webhook URL
+
+    # 飞书应用凭证（用于直发个人通知）
+    app_id: Optional[str] = None       # 飞书应用 App ID
+    app_secret: Optional[str] = None   # 飞书应用 App Secret
+    receive_id_type: str = "open_id"   # 用户 ID 类型: open_id | union_id | user_id | email
     
     # 默认来源
     default_source: str = "default"  # 消息来源标识
@@ -84,6 +69,12 @@ class NotifyConfig:
         # Webhook URL
         if self.webhook_url is None:
             self.webhook_url = os.environ.get("FEISHU_WEBHOOK")
+
+        # 飞书应用凭证
+        if self.app_id is None:
+            self.app_id = os.environ.get("FEISHU_APP_ID")
+        if self.app_secret is None:
+            self.app_secret = os.environ.get("FEISHU_APP_SECRET")
         
         # 默认来源
         if env_source := os.environ.get("FEISHU_SOURCE"):
@@ -110,6 +101,11 @@ class NotifyConfig:
     
     def validate(self) -> bool:
         """验证配置有效性"""
-        if not self.webhook_url:
-            raise ValueError("webhook_url is required. Set it via config or FEISHU_WEBHOOK env var.")
+        has_webhook = bool(self.webhook_url)
+        has_app = bool(self.app_id and self.app_secret)
+        if not has_webhook and not has_app:
+            raise ValueError(
+                "至少需要配置 webhook_url 或 app_id+app_secret。"
+                "可通过参数传入或设置环境变量 FEISHU_WEBHOOK / FEISHU_APP_ID+FEISHU_APP_SECRET。"
+            )
         return True

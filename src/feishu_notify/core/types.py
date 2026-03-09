@@ -118,6 +118,10 @@ class NotifyMessage:
     
     # 扩展字段
     extra: Optional[Dict[str, Any]] = None
+
+    # 发送目标（可选，用于直发个人）
+    to_user: Optional[str] = None        # 单个用户 ID（open_id / union_id）
+    to_users: Optional[List[str]] = None  # 多个用户 ID
     
     def __post_init__(self):
         """初始化后处理"""
@@ -186,5 +190,7 @@ class NotifyMessage:
             "mention_all": self.mention_all,
             "dedupe_key": self.dedupe_key,
             "extra": self.extra,
+            "to_user": self.to_user,
+            "to_users": self.to_users,
         }
 

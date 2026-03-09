@@ -10,14 +10,19 @@
 - 🚀 **同步/异步发送**：支持 `async/await`
 - 🔁 **自动重试**：发送失败自动重试
 - 🎯 **去重 & 限流**：避免消息刷屏
+- 👤 **直发个人**：通过飞书应用 API 直接通知到个人（支持 Webhook + IM API 双通道）
 
 ## 安装
 
 ```bash
-pip install httpx jinja2
+# 从 Git 仓库安装（推荐，适合公司内部私有包）
+pip install git+https://github.com/your-org/feishu-notify.git
 
-# 或从源码安装
+# 本地开发安装
 pip install -e .
+
+# 如果公司有私有 PyPI
+pip install feishu-notify --index-url https://pypi.company.com/simple/
 ```
 
 ## 快速开始
@@ -41,7 +46,7 @@ export FEISHU_WEBHOOK="https://open.feishu.cn/open-apis/bot/v2/hook/your-webhook
 ### 2. 使用内置级别发送
 
 ```python
-from notifier import Notifier
+from feishu_notify import Notifier
 
 notifier = Notifier(webhook="https://...", source="Airflow")
 
@@ -54,12 +59,58 @@ notifier.info("任务已启动", content="开始处理...")           # 蓝色
 notifier.pending("权限申请", content="请审批")               # 紫色
 ```
 
-### 3. 使用自定义模板（热插拔）
+### 3. 直发个人通知
 
-只需创建 JSON 模板文件，即可自动获得调用方法：
+通过飞书应用 API 直接将消息发送到个人，无需拉群：
 
 ```python
-# 假设你创建了 templates/custom/timeout_warning.json
+from feishu_notify import Notifier
+
+# 配置应用凭证（也可通过环境变量 FEISHU_APP_ID / FEISHU_APP_SECRET）
+notifier = Notifier(
+    webhook="https://...",           # 群通知（可选）
+    app_id="cli_xxx",               # 飞书应用 App ID
+    app_secret="xxx",               # 飞书应用 App Secret
+    source="Airflow"
+)
+
+# 发群（不变）
+notifier.success("任务完成")
+
+# 发给个人
+notifier.success("你的报表好了", to_user="ou_xxxx")
+
+# 发给多人
+notifier.success("任务完成", to_users=["ou_xxx1", "ou_xxx2"])
+
+# 也可以只配 app 凭证，不配 webhook（只发个人不发群）
+notifier = Notifier(app_id="cli_xxx", app_secret="xxx")
+notifier.info("报表已生成", to_user="ou_xxxx", link_url="https://...")
+```
+
+> **前提条件**：需要有飞书企业自建应用，并确保目标用户在应用的可见范围内。
+> `to_user` 默认使用 `open_id`，可通过 `NotifyConfig(receive_id_type="union_id")` 切换。
+
+### 4. 使用自定义模板（热插拔）
+
+在项目中创建模板目录，放入 JSON 模板文件，通过配置指向该目录即可自动获得调用方法：
+
+```python
+from pathlib import Path
+from feishu_notify import Notifier
+from feishu_notify.config import NotifyConfig
+
+# 方式 1：通过 template_dir 指定你项目中的模板目录
+notifier = Notifier(
+    webhook="https://...",
+    config=NotifyConfig(template_dir=Path("./my_templates")),
+)
+
+# 方式 2：通过环境变量指定（推荐，适合部署环境）
+# export FEISHU_TEMPLATE_DIR=/path/to/your/project/templates
+notifier = Notifier(webhook="https://...")
+
+# 假设模板目录下有 timeout_warning.json，即可直接调用
 notifier.timeout_warning("任务超时", task_name="sync_job", duration="45min")
 
 # 模板中指定了 default_level: WARNING，所以卡片是黄色的
@@ -73,55 +124,35 @@ notifier.timeout_warning("严重超时", level=NotifyLevel.ERROR)  # 变成橙�
 
 ```
 feishu-notify/
-├── __init__.py              # 主入口导出
-├── notifier.py              # Notifier 类
-├── config/
-│   ├── __init__.py          # 配置类 NotifyConfig
-│   └── levels.json          # 级别配置（颜色、emoji、前缀）
-├── core/
-│   ├── types.py             # 类型定义
-│   ├── builder.py           # 卡片构建器
-│   ├── sender.py            # 发送器
-│   └── dedup.py             # 去重限流
-├── templates/
-│   ├── loader.py            # 模板加载器
-│   ├── base/                # 默认模板（按级别）
-│   │   └── *.json
-│   └── custom/              # 自定义模板（热插拔）
-│       └── *.json
+├── pyproject.toml
+├── README.md
 ├── examples/                # 示例代码（可直接运行）
 │   ├── basic_usage.py
 │   └── airflow_integration.py
-├── README.md
-├── pyproject.toml
-└── requirements.txt
+└── src/
+    └── feishu_notify/       # 包主目录
+        ├── __init__.py      # 主入口导出
+        ├── notifier.py      # Notifier 类
+        ├── config/
+        │   └── __init__.py  # 配置类 NotifyConfig
+        ├── core/
+        │   ├── types.py     # 类型定义
+        │   ├── builder.py   # 卡片构建器
+        │   ├── sender.py    # 发送器
+        │   └── dedup.py     # 去重限流
+        └── templates/
+            ├── loader.py    # 模板加载器
+            ├── base/        # 默认模板（按级别）
+            │   └── *.json
+            └── custom/      # 自定义模板（热插拔）
+                └── *.json
 ```
 
 ---
 
-## 级别配置
+## 级别说明
 
-级别配置在 `config/levels.json`，定义了每个级别的颜色、Emoji、前缀等：
-
-```json
-{
-  "CRITICAL": {
-    "priority": "P0",
-    "color": "red",
-    "emoji": "🚨",
-    "prefix": "[紧急]",
-    "mention_all_default": true,
-    "skip_rate_limit": true
-  },
-  "WARNING": {
-    "priority": "P2",
-    "color": "yellow",
-    "emoji": "⚠️",
-    "prefix": "[警告]"
-  }
-  // ...
-}
-```
+级别配置定义在 `NotifyLevel` 枚举中：
 
 | 级别 | 颜色 | Emoji | 说明 |
 |------|------|-------|------|
@@ -138,7 +169,7 @@ feishu-notify/
 
 ### 模板格式
 
-创建 `templates/custom/your_template.json`：
+在你的模板目录下创建 `your_template.json`（文件名即方法名）：
 
 ```json
 {
@@ -216,7 +247,17 @@ feishu-notify/
 ### 使用自定义模板
 
 ```python
-# 方式 1：直接调用（自动生成方法）
+from pathlib import Path
+from feishu_notify import Notifier
+from feishu_notify.config import NotifyConfig
+
+# 初始化时指定模板目录
+notifier = Notifier(
+    webhook="https://...",
+    config=NotifyConfig(template_dir=Path("./my_templates")),
+)
+
+# 方式 1：直接调用（模板文件名即方法名，自动生成）
 notifier.timeout_warning("任务超时", task_name="sync_job")
 
 # 方式 2：指定级别覆盖
@@ -272,6 +313,10 @@ notifier.error(
     
     # 扩展字段
     extra={"自定义字段": "值"},
+
+    # 直发个人（可选，需配置 app_id/app_secret）
+    to_user="ou_xxxx",                  # 发给单人
+    to_users=["ou_xxx1", "ou_xxx2"],    # 发给多人
 )
 ```
 
@@ -296,8 +341,8 @@ asyncio.run(main())
 ## 配置选项
 
 ```python
-from notifier import Notifier
-from config import NotifyConfig
+from feishu_notify import Notifier
+from feishu_notify.config import NotifyConfig
 
 config = NotifyConfig(
     webhook_url="https://...",
@@ -329,7 +374,9 @@ notifier = Notifier(config=config)
 
 | 变量名 | 说明 |
 |--------|------|
-| `FEISHU_WEBHOOK` | Webhook URL |
+| `FEISHU_WEBHOOK` | Webhook URL（群通知） |
+| `FEISHU_APP_ID` | 飞书应用 App ID（个人通知） |
+| `FEISHU_APP_SECRET` | 飞书应用 App Secret（个人通知） |
 | `FEISHU_SOURCE` | 默认消息来源 |
 | `FEISHU_TEMPLATE_DIR` | 自定义模板目录 |
 | `FEISHU_REDIS_URL` | Redis URL（分布式去重） |
@@ -339,7 +386,7 @@ notifier = Notifier(config=config)
 ## Airflow 集成示例
 
 ```python
-from notifier import Notifier
+from feishu_notify import Notifier
 
 notifier = Notifier(webhook="https://...", source="Airflow")
 
