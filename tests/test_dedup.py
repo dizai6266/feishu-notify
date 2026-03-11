@@ -4,13 +4,13 @@ import time
 
 import pytest
 
-from feishu_notify.core.dedup import (
+from feishu_card_notify.core.dedup import (
     DedupManager,
     MemoryDedupBackend,
     MessageFilter,
     RateLimiter,
 )
-from feishu_notify.core.types import NotifyLevel, NotifyMessage
+from feishu_card_notify.core.types import NotifyLevel, NotifyMessage
 
 
 def _make_msg(level=NotifyLevel.INFO, title="Test", dedupe_key=None):
@@ -22,14 +22,14 @@ def _make_msg(level=NotifyLevel.INFO, title="Test", dedupe_key=None):
 
 class TestMemoryDedupBackend:
     def test_set_and_get(self):
-        from feishu_notify.core.dedup import DedupRecord
+        from feishu_card_notify.core.dedup import DedupRecord
         backend = MemoryDedupBackend()
         record = DedupRecord(key="k", first_seen=1.0, last_seen=1.0)
         backend.set("k", record, ttl=60)
         assert backend.get("k") is not None
 
     def test_get_expired(self):
-        from feishu_notify.core.dedup import DedupRecord
+        from feishu_card_notify.core.dedup import DedupRecord
         backend = MemoryDedupBackend()
         record = DedupRecord(key="k", first_seen=1.0, last_seen=1.0)
         backend.set("k", record, ttl=0)
@@ -37,7 +37,7 @@ class TestMemoryDedupBackend:
         assert backend.get("k") is None
 
     def test_delete(self):
-        from feishu_notify.core.dedup import DedupRecord
+        from feishu_card_notify.core.dedup import DedupRecord
         backend = MemoryDedupBackend()
         record = DedupRecord(key="k", first_seen=1.0, last_seen=1.0)
         backend.set("k", record, ttl=60)
@@ -45,7 +45,7 @@ class TestMemoryDedupBackend:
         assert backend.get("k") is None
 
     def test_cleanup(self):
-        from feishu_notify.core.dedup import DedupRecord
+        from feishu_card_notify.core.dedup import DedupRecord
         backend = MemoryDedupBackend()
         backend.set("a", DedupRecord(key="a", first_seen=1.0, last_seen=1.0), ttl=0)
         backend.set("b", DedupRecord(key="b", first_seen=1.0, last_seen=1.0), ttl=300)

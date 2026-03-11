@@ -1,7 +1,7 @@
 import pytest
 
-from feishu_notify.config import NotifyConfig
-from feishu_notify.core.types import LinkButton, NotifyLevel, NotifyMessage
+from feishu_card_notify.config import NotifyConfig
+from feishu_card_notify.core.types import LinkButton, NotifyLevel, NotifyMessage
 
 
 @pytest.fixture

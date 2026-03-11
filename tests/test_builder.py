@@ -1,7 +1,7 @@
 """Tests for FeishuCardBuilder"""
 
-from feishu_notify.core.builder import FeishuCardBuilder, build_card, build_webhook_payload
-from feishu_notify.core.types import LinkButton, NotifyLevel, NotifyMessage
+from feishu_card_notify.core.builder import FeishuCardBuilder, build_card, build_webhook_payload
+from feishu_card_notify.core.types import LinkButton, NotifyLevel, NotifyMessage
 
 
 class TestFeishuCardBuilder:

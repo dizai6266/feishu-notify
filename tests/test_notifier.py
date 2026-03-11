@@ -4,10 +4,10 @@ import pytest
 import httpx
 import respx
 
-from feishu_notify.config import NotifyConfig
-from feishu_notify.core.sender import SendResult
-from feishu_notify.core.types import NotifyLevel, NotifyMessage
-from feishu_notify.notifier import Notifier, get_notifier, set_default_notifier
+from feishu_card_notify.config import NotifyConfig
+from feishu_card_notify.core.sender import SendResult
+from feishu_card_notify.core.types import NotifyLevel, NotifyMessage
+from feishu_card_notify.notifier import Notifier, get_notifier, set_default_notifier
 
 
 WEBHOOK_URL = "https://open.feishu.cn/open-apis/bot/v2/hook/test-hook"

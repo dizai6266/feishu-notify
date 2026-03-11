@@ -7,10 +7,10 @@
 
 from typing import Any, Dict, List, Optional, TYPE_CHECKING
 
-from feishu_notify.core.types import NotifyLevel, NotifyMessage
+from feishu_card_notify.core.types import NotifyLevel, NotifyMessage
 
 if TYPE_CHECKING:
-    from feishu_notify.templates.loader import TemplateLoader
+    from feishu_card_notify.templates.loader import TemplateLoader
 
 
 class FeishuCardBuilder:

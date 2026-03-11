@@ -8,11 +8,11 @@ import asyncio
 import logging
 from typing import Any, Dict, List, Optional, Tuple
 
-from feishu_notify.config import NotifyConfig
-from feishu_notify.core.dedup import DedupManager, MessageFilter, RateLimiter
-from feishu_notify.core.sender import FeishuSender, SendResult
-from feishu_notify.core.types import LinkButton, NotifyLevel, NotifyMessage
-from feishu_notify.templates.loader import TemplateLoader
+from feishu_card_notify.config import NotifyConfig
+from feishu_card_notify.core.dedup import DedupManager, MessageFilter, RateLimiter
+from feishu_card_notify.core.sender import FeishuSender, SendResult
+from feishu_card_notify.core.types import LinkButton, NotifyLevel, NotifyMessage
+from feishu_card_notify.templates.loader import TemplateLoader
 
 
 logger = logging.getLogger(__name__)

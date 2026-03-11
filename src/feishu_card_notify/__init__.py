@@ -2,8 +2,8 @@
 飞书通知工具 - 一个热插拔、灵活、易用的飞书卡片通知库
 
 Usage:
-    from feishu_notify import Notifier
-    from feishu_notify.core.types import NotifyLevel, NotifyMessage
+    from feishu_card_notify import Notifier
+    from feishu_card_notify.core.types import NotifyLevel, NotifyMessage
 
     # 快捷方式
     notifier = Notifier(webhook="https://...")
@@ -17,16 +17,16 @@ Usage:
 
 from importlib.metadata import version, PackageNotFoundError
 
-from feishu_notify.core.types import NotifyLevel, NotifyMessage, LinkButton
-from feishu_notify.core.builder import FeishuCardBuilder
-from feishu_notify.core.sender import FeishuSender
-from feishu_notify.core.dedup import DedupManager, RateLimiter
-from feishu_notify.templates.loader import TemplateLoader
-from feishu_notify.config import NotifyConfig
-from feishu_notify.notifier import Notifier
+from feishu_card_notify.core.types import NotifyLevel, NotifyMessage, LinkButton
+from feishu_card_notify.core.builder import FeishuCardBuilder
+from feishu_card_notify.core.sender import FeishuSender
+from feishu_card_notify.core.dedup import DedupManager, RateLimiter
+from feishu_card_notify.templates.loader import TemplateLoader
+from feishu_card_notify.config import NotifyConfig
+from feishu_card_notify.notifier import Notifier
 
 try:
-    __version__ = version("feishu-notify")
+    __version__ = version("feishu-card-notify")
 except PackageNotFoundError:
     __version__ = "0.0.0-dev"
 __all__ = [

@@ -16,7 +16,7 @@ from collections import defaultdict
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Tuple
 
-from feishu_notify.core.types import NotifyLevel, NotifyMessage
+from feishu_card_notify.core.types import NotifyLevel, NotifyMessage
 
 
 @dataclass

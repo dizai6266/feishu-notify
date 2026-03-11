@@ -4,8 +4,8 @@ import pytest
 import httpx
 import respx
 
-from feishu_notify.core.sender import FeishuSender, SendResult
-from feishu_notify.core.types import NotifyLevel, NotifyMessage
+from feishu_card_notify.core.sender import FeishuSender, SendResult
+from feishu_card_notify.core.types import NotifyLevel, NotifyMessage
 
 
 WEBHOOK_URL = "https://open.feishu.cn/open-apis/bot/v2/hook/test-hook"

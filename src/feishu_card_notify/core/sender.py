@@ -18,10 +18,10 @@ from typing import Any, Dict, List, Optional, TYPE_CHECKING
 
 import httpx
 
-from feishu_notify.core.types import NotifyMessage
+from feishu_card_notify.core.types import NotifyMessage
 
 if TYPE_CHECKING:
-    from feishu_notify.templates.loader import TemplateLoader
+    from feishu_card_notify.templates.loader import TemplateLoader
 
 
 logger = logging.getLogger(__name__)
@@ -220,7 +220,7 @@ class FeishuSender:
 
     def _build_payload(self, message: NotifyMessage) -> Dict[str, Any]:
         """构建 Webhook payload"""
-        from feishu_notify.core.builder import FeishuCardBuilder
+        from feishu_card_notify.core.builder import FeishuCardBuilder
         return FeishuCardBuilder(message, self._template_loader).to_webhook_payload()
 
     def send(self, message: NotifyMessage) -> SendResult:
@@ -310,13 +310,13 @@ class FeishuSender:
 
     def send_to_user(self, message: NotifyMessage, user_id: str) -> SendResult:
         """同步发送消息给单个用户"""
-        from feishu_notify.core.builder import FeishuCardBuilder
+        from feishu_card_notify.core.builder import FeishuCardBuilder
         card = FeishuCardBuilder(message, self._template_loader).build()
         return self._send_card_to_user(card, user_id)
 
     async def send_to_user_async(self, message: NotifyMessage, user_id: str) -> SendResult:
         """异步发送消息给单个用户"""
-        from feishu_notify.core.builder import FeishuCardBuilder
+        from feishu_card_notify.core.builder import FeishuCardBuilder
         card = FeishuCardBuilder(message, self._template_loader).build()
         return await self._send_card_to_user_async(card, user_id)
 
@@ -338,7 +338,7 @@ class FeishuSender:
 
     def send_to_users(self, message: NotifyMessage, user_ids: List[str]) -> List[SendResult]:
         """同步发送消息给多个用户"""
-        from feishu_notify.core.builder import FeishuCardBuilder
+        from feishu_card_notify.core.builder import FeishuCardBuilder
         card = FeishuCardBuilder(message, self._template_loader).build()
         return [self._send_card_to_user(card, uid) for uid in user_ids]
 
@@ -346,7 +346,7 @@ class FeishuSender:
         self, message: NotifyMessage, user_ids: List[str]
     ) -> List[SendResult]:
         """异步发送消息给多个用户（并发）"""
-        from feishu_notify.core.builder import FeishuCardBuilder
+        from feishu_card_notify.core.builder import FeishuCardBuilder
         card = FeishuCardBuilder(message, self._template_loader).build()
         return list(await asyncio.gather(*[
             self._send_card_to_user_async(card, uid) for uid in user_ids

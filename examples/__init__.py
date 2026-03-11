@@ -1,2 +1,2 @@
-# Examples for feishu-notify
+# Examples for feishu-card-notify
 

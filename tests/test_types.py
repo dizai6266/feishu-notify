@@ -3,7 +3,7 @@
 import pytest
 from datetime import datetime
 
-from feishu_notify.core.types import LinkButton, NotifyLevel, NotifyMessage
+from feishu_card_notify.core.types import LinkButton, NotifyLevel, NotifyMessage
 
 
 class TestNotifyLevel:

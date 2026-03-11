@@ -1,4 +1,4 @@
-# 飞书通知工具 (feishu-notify)
+# 飞书通知工具 (feishu-card-notify)
 
 一个**热插拔**、**灵活**、**易用**的飞书卡片通知工具。
 
@@ -15,14 +15,15 @@
 ## 安装
 
 ```bash
-# 从 Git 仓库安装（推荐，适合公司内部私有包）
-pip install git+https://github.com/your-org/feishu-notify.git
+pip install feishu-card-notify
+```
 
-# 本地开发安装
-pip install -e .
+### 本地开发
 
-# 如果公司有私有 PyPI
-pip install feishu-notify --index-url https://pypi.company.com/simple/
+```bash
+git clone https://github.com/dizai6266/feishu-card-notify.git
+cd feishu-card-notify
+pip install -e ".[dev]"
 ```
 
 ## 快速开始
@@ -46,7 +47,7 @@ export FEISHU_WEBHOOK="https://open.feishu.cn/open-apis/bot/v2/hook/your-webhook
 ### 2. 使用内置级别发送
 
 ```python
-from feishu_notify import Notifier
+from feishu_card_notify import Notifier
 
 notifier = Notifier(webhook="https://...", source="Airflow")
 
@@ -64,7 +65,7 @@ notifier.pending("权限申请", content="请审批")               # 紫色
 通过飞书应用 API 直接将消息发送到个人，无需拉群：
 
 ```python
-from feishu_notify import Notifier
+from feishu_card_notify import Notifier
 
 # 配置应用凭证（也可通过环境变量 FEISHU_APP_ID / FEISHU_APP_SECRET）
 notifier = Notifier(
@@ -97,8 +98,8 @@ notifier.info("报表已生成", to_user="ou_xxxx", link_url="https://...")
 
 ```python
 from pathlib import Path
-from feishu_notify import Notifier
-from feishu_notify.config import NotifyConfig
+from feishu_card_notify import Notifier
+from feishu_card_notify.config import NotifyConfig
 
 # 方式 1：通过 template_dir 指定你项目中的模板目录
 notifier = Notifier(
@@ -123,14 +124,23 @@ notifier.timeout_warning("严重超时", level=NotifyLevel.ERROR)  # 变成橙�
 ## 项目结构
 
 ```
-feishu-notify/
+feishu-card-notify/
 ├── pyproject.toml
 ├── README.md
-├── examples/                # 示例代码（可直接运行）
+├── LICENSE
+├── examples/                   # 示例代码（可直接运行）
 │   ├── basic_usage.py
 │   └── airflow_integration.py
+├── tests/                   # 单元测试
+│   ├── conftest.py
+│   ├── test_notifier.py
+│   ├── test_builder.py
+│   ├── test_sender.py
+│   ├── test_dedup.py
+│   ├── test_template_loader.py
+│   └── test_types.py
 └── src/
-    └── feishu_notify/       # 包主目录
+    └── feishu_card_notify/       # 包主目录
         ├── __init__.py      # 主入口导出
         ├── notifier.py      # Notifier 类
         ├── config/
@@ -144,8 +154,9 @@ feishu-notify/
             ├── loader.py    # 模板加载器
             ├── base/        # 默认模板（按级别）
             │   └── *.json
-            └── custom/      # 自定义模板（热插拔）
-                └── *.json
+            └── custom/      # 自定义模板示例
+                ├── data_quality.json
+                └── timeout_warning.json
 ```
 
 ---
@@ -248,8 +259,8 @@ feishu-notify/
 
 ```python
 from pathlib import Path
-from feishu_notify import Notifier
-from feishu_notify.config import NotifyConfig
+from feishu_card_notify import Notifier
+from feishu_card_notify.config import NotifyConfig
 
 # 初始化时指定模板目录
 notifier = Notifier(
@@ -326,7 +337,7 @@ notifier.error(
 
 ```python
 import asyncio
-from notifier import Notifier
+from feishu_card_notify import Notifier
 
 async def main():
     async with Notifier(webhook="https://...") as notifier:
@@ -341,8 +352,8 @@ asyncio.run(main())
 ## 配置选项
 
 ```python
-from feishu_notify import Notifier
-from feishu_notify.config import NotifyConfig
+from feishu_card_notify import Notifier
+from feishu_card_notify.config import NotifyConfig
 
 config = NotifyConfig(
     webhook_url="https://...",
@@ -386,7 +397,7 @@ notifier = Notifier(config=config)
 ## Airflow 集成示例
 
 ```python
-from feishu_notify import Notifier
+from feishu_card_notify import Notifier
 
 notifier = Notifier(webhook="https://...", source="Airflow")
 

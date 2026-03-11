@@ -2,8 +2,8 @@
 
 from pathlib import Path
 
-from feishu_notify.core.types import NotifyLevel, NotifyMessage
-from feishu_notify.templates.loader import TemplateLoader
+from feishu_card_notify.core.types import NotifyLevel, NotifyMessage
+from feishu_card_notify.templates.loader import TemplateLoader
 
 
 def _make_msg(level=NotifyLevel.INFO, **kwargs):

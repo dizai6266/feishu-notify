@@ -3,8 +3,8 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "feishu-notify"
-version = "1.0.0"
+name = "feishu-card-notify"
+version = "1.0.1"
 description = "一个热插拔、灵活、易用的飞书卡片通知工具"
 readme = "README.md"
 license = {text = "MIT"}
@@ -44,13 +44,14 @@ redis = [
 ]
 
 [project.urls]
+Homepage = "https://github.com/dizai6266/feishu-card-notify"
 
 [tool.setuptools.packages.find]
 where = ["src"]
 
 [tool.setuptools.package-data]
-"feishu_notify" = ["py.typed"]
-"feishu_notify.templates" = ["base/*.json", "custom/*.json"]
+"feishu_card_notify" = ["py.typed"]
+"feishu_card_notify.templates" = ["base/*.json", "custom/*.json"]
 
 [tool.black]
 line-length = 100

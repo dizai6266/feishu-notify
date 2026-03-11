@@ -14,8 +14,8 @@ import asyncio
 import os
 import sys
 
-from feishu_notify import Notifier
-from feishu_notify.core.types import NotifyLevel, NotifyMessage
+from feishu_card_notify import Notifier
+from feishu_card_notify.core.types import NotifyLevel, NotifyMessage
 
 
 # 从环境变量获取 Webhook URL

@@ -16,7 +16,7 @@ from typing import Any, Dict, List, Optional
 
 from jinja2.sandbox import SandboxedEnvironment
 
-from feishu_notify.core.types import NotifyLevel, NotifyMessage
+from feishu_card_notify.core.types import NotifyLevel, NotifyMessage
 
 
 # 目录路径
